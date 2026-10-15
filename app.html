@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hedge Math - the app</title>
 <style>
-  :root { --accent: #4a3a7a; }
+  :root { --accent: #4a7a5a; }
   * { box-sizing: border-box; }
   body { font-family: Georgia, serif; max-width: 44em; margin: 2em auto; padding: 0 1em; color: #222; background: #fbfaf7; }
   h1 { color: var(--accent); margin-bottom: 0.1em; }
   .tag { color: var(--accent); font-style: italic; margin-top: 0; }
   .card { background: #fff; border: 1px solid #ddd; border-left: 4px solid var(--accent); border-radius: 6px; padding: 1em 1.2em; margin: 1.2em 0; }
+  .boundary { border-left-color: #a33; background: #fdf5f3; }
+  .boundary h3 { color: #a33; }
   h3 { margin-top: 0; }
   label { display: block; font-size: 0.9em; font-weight: 600; margin: 0.7em 0 0.2em; }
   input { width: 100%; max-width: 12em; padding: 0.4em 0.5em; font-size: 1em; border: 1px solid #bbb; border-radius: 4px; background: #f4f3ef; }
@@ -22,7 +24,12 @@
 </head>
 <body>
 <h1>Hedge Math</h1>
-<p class="tag">Blade truth, hedge truth and tooth truth - labeled norms, honest arithmetic.</p>
+<p class="tag">Blade truth and hedge truth - labeled norms, honest arithmetic.</p>
+
+<div class="card boundary">
+  <h3>The boundary</h3>
+  <p>Hedge Math keeps pass and schedule arithmetic only. It gives no cutting-capacity verdicts - what your blade can safely cut is the manufacturer's call. Follow the manual's capacity and safety instructions.</p>
+</div>
 
 <div class="card">
   <h3>The blade truth</h3>
@@ -44,16 +51,7 @@
   <p class="big" id="h-out"></p>
 </div>
 
-<div class="card">
-  <h3>The tooth truth</h3>
-  <label for="t-gap">Tooth gap (inches)</label>
-  <input id="t-gap" type="number" step="any" value="0.75">
-  <label for="t-branch">Your branch (inches)</label>
-  <input id="t-branch" type="number" step="any" value="0.5">
-  <p class="big" id="t-out"></p>
-</div>
-
-<p class="foot">The 3-inch grip norm and the 0.8 tooth norm are labeled norms - the arithmetic is honest, and the last face at dusk keeps the honest ledger.</p>
+<p class="foot">The 3-inch grip norm is a labeled norm - the arithmetic is honest, and the last face at dusk keeps the honest ledger.</p>
 
 <script src="engine.js"></script>
 <script>
@@ -73,17 +71,10 @@ function runHedge(){
   if (r.error) return show("h-out", r.error, true);
   show("h-out", HedgeMath.renderHedge.apply(null, [r].concat(args)), false);
 }
-function runTooth(){
-  var args = [v("t-gap"), v("t-branch")];
-  var r = HedgeMath.toothPlan.apply(null, args);
-  if (r.error) return show("t-out", r.error, true);
-  show("t-out", HedgeMath.renderTooth.apply(null, [r].concat(args)), false);
-}
 
 ["b-blade","b-height"].forEach(function(id){ g(id).addEventListener("input", runBlade); });
 ["h-length","h-passes","h-pace"].forEach(function(id){ g(id).addEventListener("input", runHedge); });
-["t-gap","t-branch"].forEach(function(id){ g(id).addEventListener("input", runTooth); });
-runBlade(); runHedge(); runTooth();
+runBlade(); runHedge();
 </script>
 </body>
 </html>
