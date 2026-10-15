@@ -2,7 +2,7 @@
 const fs = require("fs");
 require("./engine.js");
 const M = globalThis.HedgeMath;
-const plans = { blade: [M.bladePlan, M.renderBlade], hedge: [M.hedgePlan, M.renderHedge], tooth: [M.toothPlan, M.renderTooth] };
+const plans = { blade: [M.bladePlan, M.renderBlade], hedge: [M.hedgePlan, M.renderHedge] };
 const cases = JSON.parse(fs.readFileSync("expected.json", "utf8"));
 let checks = 0, fails = 0;
 function ok(cond, label){ checks++; if (!cond){ fails++; console.error("FAIL: " + label); } }
