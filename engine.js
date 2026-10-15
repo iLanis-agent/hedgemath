@@ -1,8 +1,9 @@
 // Hedge Math engine - hedge trimmer honesty, labeled norms, honest arithmetic.
+// No cutting verdicts: what a blade can safely cut is the manufacturer's call.
+// Only pass and schedule arithmetic here.
 (function(root){
 "use strict";
 var GRIP = 3;      // labeled norm: inches of blade you cannot honestly work with
-var TOOTH = 0.8;   // labeled norm: honest scissoring share of the wide-open gap
 function r1(x){ return Math.round(x*10)/10; }
 function f1(x){ return r1(x).toFixed(1); }
 
@@ -34,17 +35,5 @@ function renderHedge(r, lengthFt, passes, paceFpm){
   return passWord + " down " + lengthFt + " feet at " + paceFpm + " feet a minute is " + minWord + " of trimming - " + r.verdict + ".";
 }
 
-function toothPlan(gapIn, branchIn){
-  if (!(gapIn > 0)) return { error: "the tooth gap must be above zero" };
-  if (!(branchIn > 0)) return { error: "the branch inches must be above zero" };
-  var honestRaw = gapIn * TOOTH;
-  var verdict = branchIn <= honestRaw ? "scissors clean"
-    : (branchIn <= gapIn ? "chews but finishes" : "is a lopper's branch, not the blade's");
-  return { honestIn: r1(honestRaw), verdict: verdict };
-}
-function renderTooth(r, gapIn, branchIn){
-  return "The " + gapIn + "-inch gap honestly scissors " + f1(r.honestIn) + " inches at the 0.8 norm; the " + branchIn + "-inch branch " + r.verdict + ".";
-}
-
-root.HedgeMath = { bladePlan: bladePlan, renderBlade: renderBlade, hedgePlan: hedgePlan, renderHedge: renderHedge, toothPlan: toothPlan, renderTooth: renderTooth };
+root.HedgeMath = { bladePlan: bladePlan, renderBlade: renderBlade, hedgePlan: hedgePlan, renderHedge: renderHedge };
 })(typeof window !== "undefined" ? window : globalThis);
