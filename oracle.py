@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Hedge Math oracle - mirrors engine.js float-for-float.
+# No cutting verdicts: pass and schedule arithmetic only.
 import json, math
 GRIP = 3
-TOOTH = 0.8
 def r1(x): return math.floor(x*10+0.5)/10
 def f1(x): return "%.1f" % r1(x)
 def jsnum(x):
@@ -35,28 +35,15 @@ def render_hedge(r, length, passes, pace):
     return ("%s down %s feet at %s feet a minute is %s of trimming - %s."
             % (pass_word, length, pace, min_word, r["verdict"]))
 
-def tooth_plan(gap, branch):
-    if not (gap > 0): return {"error": "the tooth gap must be above zero"}
-    if not (branch > 0): return {"error": "the branch inches must be above zero"}
-    honest_raw = gap * TOOTH
-    verdict = "scissors clean" if branch <= honest_raw else ("chews but finishes" if branch <= gap else "is a lopper's branch, not the blade's")
-    return {"honestIn": jsnum(r1(honest_raw)), "verdict": verdict}
-def render_tooth(r, gap, branch):
-    return ("The %s-inch gap honestly scissors %s inches at the 0.8 norm; the %s-inch branch %s."
-            % (gap, f1(r["honestIn"]), branch, r["verdict"]))
-
 CASES = [
     ("blade", (24,4)), ("blade", (22,2)), ("blade", (18,6)),
     ("blade", (16,8)), ("blade", (26,3)), ("blade", (20,5)),
     ("hedge", (30,3,20)), ("hedge", (60,4,15)), ("hedge", (100,3,25)),
     ("hedge", (80,8,20)), ("hedge", (150,4,18)), ("hedge", (200,8,15)),
-    ("tooth", (0.75,0.5)), ("tooth", (0.75,0.7)), ("tooth", (0.75,1)),
-    ("tooth", (1,0.8)), ("tooth", (0.6,0.4)), ("tooth", (1.2,1.5)),
-    ("blade", (0,4)), ("blade", (24,0)),
+    ("blade", (0,4)), ("blade", (24,0)), ("blade", (3,4)),
     ("hedge", (0,3,20)), ("hedge", (30,0,20)), ("hedge", (30,3,0)),
-    ("tooth", (0,0.5)), ("tooth", (0.75,0)),
 ]
-PLANS = {"blade": (blade_plan, render_blade), "hedge": (hedge_plan, render_hedge), "tooth": (tooth_plan, render_tooth)}
+PLANS = {"blade": (blade_plan, render_blade), "hedge": (hedge_plan, render_hedge)}
 out = []
 for tool, args in CASES:
     plan, render = PLANS[tool]
